@@ -1,5 +1,5 @@
 name: silo_calculator
-description: "A new Flutter project."
+description: "A silo capacity calculator"
 publish_to: 'none'
 version: 0.1.0
 
@@ -9,6 +9,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  provider: ^6.1.1
+  google_fonts: ^6.2.1
+  font_awesome_flutter: ^10.7.0
+  shared_preferences: ^2.2.3
 
 dev_dependencies:
   flutter_test:
