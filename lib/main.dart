@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'core/theme/app_theme.dart';
 import 'view_models/settings_view_model.dart';
+import 'view_models/silo_view_model.dart';
 import 'ui/views/home_view.dart';
 
 void main() {
@@ -9,6 +10,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => SettingsViewModel()),
+        ChangeNotifierProvider(create: (_) => SiloViewModel()),
       ],
       child: const MainApp(),
     ),

@@ -14,7 +14,7 @@ class AppTheme {
     ),
     textTheme: GoogleFonts.outfitTextTheme(),
     appBarTheme: const AppBarTheme(
-      backgroundColor: Color(0xFFFEF5D4),
+      backgroundColor: Color(0xFFF7EDCD),
       foregroundColor: Colors.black87,
       elevation: 0,
     ),

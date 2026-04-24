@@ -5,10 +5,7 @@ import '../../view_models/settings_view_model.dart';
 class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
 
-  const MainAppBar({
-    super.key,
-    required this.title,
-  });
+  const MainAppBar({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -19,11 +16,10 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
       height: preferredSize.height,
       padding: const EdgeInsets.symmetric(horizontal: 24),
       decoration: BoxDecoration(
-        color: Theme.of(context).scaffoldBackgroundColor,
+        color: Theme.of(context).appBarTheme.backgroundColor,
         border: Border(
           bottom: BorderSide(
-            color: Theme.of(context).dividerColor.withValues(alpha: 0.2),
-            width: 1.5,
+            color: Theme.of(context).dividerColor.withValues(alpha: 0.1),
           ),
         ),
       ),
@@ -41,7 +37,9 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
           IconButton(
             onPressed: () => settingsViewModel.toggleTheme(),
             icon: Icon(
-              isDark ? Icons.wb_sunny_outlined : Icons.nightlight_round_outlined,
+              isDark
+                  ? Icons.wb_sunny_outlined
+                  : Icons.nightlight_round_outlined,
             ),
             tooltip: isDark ? 'Tryb jasny' : 'Tryb ciemny',
           ),
