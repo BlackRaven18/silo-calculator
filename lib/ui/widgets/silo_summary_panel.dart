@@ -66,24 +66,33 @@ class SiloSummaryPanel extends StatelessWidget {
     final valueColor = isDark ? Colors.white : Colors.black;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
+      padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: isMain ? 17 : 15,
-              fontWeight: isMain ? FontWeight.bold : FontWeight.normal,
-              color: labelColor,
+          Expanded(
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: isMain ? 17 : 15,
+                fontWeight: isMain ? FontWeight.bold : FontWeight.normal,
+                color: labelColor,
+              ),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
             ),
           ),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: isMain ? 22 : 18,
-              fontWeight: FontWeight.w900,
-              color: isMain ? AppTheme.primaryColor : valueColor,
+          const SizedBox(width: 8),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerRight,
+            child: Text(
+              value,
+              style: TextStyle(
+                fontSize: isMain ? 22 : 18,
+                fontWeight: FontWeight.w900,
+                color: isMain ? AppTheme.primaryColor : valueColor,
+              ),
             ),
           ),
         ],
