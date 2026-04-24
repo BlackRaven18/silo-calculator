@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../view_models/settings_view_model.dart';
 import 'package:silo_calculator/core/services/l10n_service.dart';
+import 'language_selector.dart';
 
 class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -19,7 +20,6 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     final settingsViewModel = context.watch<SettingsViewModel>();
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final langCode = settingsViewModel.languageCode;
 
     return Container(
       height: preferredSize.height,
@@ -65,12 +65,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ? context.l10n.theme_light
                 : context.l10n.theme_dark,
           ),
-          IconButton(
-            onPressed: () =>
-                settingsViewModel.setLanguage(langCode == 'pl' ? 'en' : 'pl'),
-            icon: const Icon(Icons.language),
-            tooltip: context.l10n.language,
-          ),
+          const LanguageSelector(),
           if (showMenuButton)
             IconButton(
               onPressed: () => Scaffold.of(context).openEndDrawer(),

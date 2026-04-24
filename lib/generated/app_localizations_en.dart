@@ -102,6 +102,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get en => 'English';
 
   @override
+  String get es => 'Español';
+
+  @override
+  String get de => 'German';
+
+  @override
   String get save_silo_dialog_title => 'Save silo';
 
   @override
