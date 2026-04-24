@@ -42,6 +42,7 @@ class SiloInputChip extends StatefulWidget {
   final String label;
   final double value;
   final SiloViewModel vm;
+  final bool isSmall;
   final Function(double) onChanged;
 
   const SiloInputChip({
@@ -50,6 +51,7 @@ class SiloInputChip extends StatefulWidget {
     required this.label,
     required this.value,
     required this.vm,
+    this.isSmall = false,
     required this.onChanged,
   });
 
@@ -96,26 +98,29 @@ class _SiloInputChipState extends State<SiloInputChip> {
         }
       },
       child: Container(
-        width: 130,
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        width: widget.isSmall ? 100 : 130,
+        padding: EdgeInsets.symmetric(
+          horizontal: widget.isSmall ? 6 : 10,
+          vertical: widget.isSmall ? 4 : 8,
+        ),
         decoration: BoxDecoration(
           color: isFocused
               ? AppTheme.primaryColor
               : Theme.of(
                   context,
                 ).scaffoldBackgroundColor.withValues(alpha: 0.8),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(widget.isSmall ? 8 : 12),
           border: Border.all(
             color: isFocused
                 ? AppTheme.accentColor
                 : AppTheme.primaryColor.withValues(alpha: 0.3),
-            width: isFocused ? 3 : 2,
+            width: isFocused ? (widget.isSmall ? 2 : 3) : (widget.isSmall ? 1 : 2),
           ),
           boxShadow: [
             if (isFocused)
               BoxShadow(
                 color: AppTheme.primaryColor.withValues(alpha: 0.4),
-                blurRadius: 12,
+                blurRadius: widget.isSmall ? 6 : 12,
               ),
           ],
         ),
@@ -125,14 +130,14 @@ class _SiloInputChipState extends State<SiloInputChip> {
             Text(
               '${widget.label}:',
               style: TextStyle(
-                fontSize: 14,
+                fontSize: widget.isSmall ? 12 : 14,
                 fontWeight: FontWeight.bold,
                 color: isFocused
                     ? Colors.white
                     : (isDark ? Colors.white70 : Colors.grey[700]),
               ),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: 4),
             Expanded(
               child: TextFormField(
                 controller: _controller,
@@ -142,7 +147,7 @@ class _SiloInputChipState extends State<SiloInputChip> {
                 inputFormatters: [DecimalInputFormatter()],
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: widget.isSmall ? 14 : 20,
                   fontWeight: FontWeight.w900,
                   color: isFocused
                       ? Colors.white

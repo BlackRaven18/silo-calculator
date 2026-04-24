@@ -7,6 +7,7 @@ class SiloPainter extends CustomPainter {
   final double cylinderHeight;
   final double hopperHeight;
   final double fillLevel;
+  final double scale;
   final bool isDarkMode;
   final SiloDimension focusedDimension;
 
@@ -15,6 +16,7 @@ class SiloPainter extends CustomPainter {
     required this.cylinderHeight,
     required this.hopperHeight,
     required this.fillLevel,
+    required this.scale,
     required this.isDarkMode,
     this.focusedDimension = SiloDimension.none,
   });
@@ -22,10 +24,6 @@ class SiloPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final center = size.center(Offset.zero);
-
-    // Scale factor to fit the silo in the canvas
-    final totalPhysicalHeight = cylinderHeight + hopperHeight + 0.8;
-    final scale = (size.height * 0.7) / totalPhysicalHeight;
 
     final pxRadius = radius * scale;
     final pxCylinderHeight = cylinderHeight * scale;

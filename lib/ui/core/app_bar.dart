@@ -4,8 +4,15 @@ import '../../view_models/settings_view_model.dart';
 
 class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
+  final bool showMenuButton;
+  final bool showDrawerButton;
 
-  const MainAppBar({super.key, required this.title});
+  const MainAppBar({
+    super.key,
+    required this.title,
+    this.showMenuButton = false,
+    this.showDrawerButton = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +21,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
 
     return Container(
       height: preferredSize.height,
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
         color: Theme.of(context).appBarTheme.backgroundColor,
         border: Border(
@@ -25,15 +32,26 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       child: Row(
         children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 1.1,
+          if (showDrawerButton)
+            IconButton(
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+              onPressed: () => Scaffold.of(context).openDrawer(),
+              icon: const Icon(Icons.settings_suggest_outlined),
+              tooltip: 'Ustawienia i wyniki',
+            ),
+          if (showDrawerButton) const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              title,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1.1,
+              ),
             ),
           ),
-          const Spacer(),
           IconButton(
             onPressed: () => settingsViewModel.toggleTheme(),
             icon: Icon(
@@ -43,6 +61,12 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
             tooltip: isDark ? 'Tryb jasny' : 'Tryb ciemny',
           ),
+          if (showMenuButton)
+            IconButton(
+              onPressed: () => Scaffold.of(context).openEndDrawer(),
+              icon: const Icon(Icons.menu_open),
+              tooltip: 'Zapisane silosy',
+            ),
         ],
       ),
     );

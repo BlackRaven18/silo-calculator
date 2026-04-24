@@ -12,10 +12,10 @@ class HomeView extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return BaseScaffold(
+      drawer: _buildControlsSidebar(context),
+      showDrawerButton: true,
       body: Row(
         children: [
-          _buildControlsSidebar(context),
-
           // Main Drawing Area
           Expanded(
             child: Container(
@@ -38,23 +38,29 @@ class HomeView extends StatelessWidget {
   }
 
   Widget _buildControlsSidebar(BuildContext context) {
-    return Container(
+    return Drawer(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       width: 320,
-      decoration: BoxDecoration(
-        color: Theme.of(context).appBarTheme.backgroundColor,
-        border: Border(
-          right: BorderSide(
-            color: Theme.of(context).dividerColor.withValues(alpha: 0.1),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).appBarTheme.backgroundColor,
+          border: Border(
+            right: BorderSide(
+              color: Theme.of(context).dividerColor.withValues(alpha: 0.1),
+            ),
           ),
         ),
-      ),
-      child: const Column(
-        children: [
-          SiloSummaryPanel(),
-          Divider(height: 1),
-          SizedBox(height: 24),
-          SiloControlsPanel(),
-        ],
+        child: const SingleChildScrollView(
+          child: Column(
+            children: [
+              SiloSummaryPanel(),
+              Divider(height: 1),
+              SizedBox(height: 24),
+              SiloControlsPanel(),
+            ],
+          ),
+        ),
       ),
     );
   }
