@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../core/base_scaffold.dart';
 import '../widgets/silo_canvas.dart';
 import '../widgets/silo_controls_panel.dart';
+import '../widgets/silo_summary_panel.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -11,9 +12,11 @@ class HomeView extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return BaseScaffold(
-      body: Column(
+      body: Row(
         children: [
-          // Main Drawing Area with Interactive Labels
+          _buildControlsSidebar(context),
+
+          // Main Drawing Area
           Expanded(
             child: Container(
               margin: const EdgeInsets.all(24),
@@ -29,8 +32,28 @@ class HomeView extends StatelessWidget {
               child: const SiloCanvas(),
             ),
           ),
+        ],
+      ),
+    );
+  }
 
-          const SiloControlsPanel(),
+  Widget _buildControlsSidebar(BuildContext context) {
+    return Container(
+      width: 320,
+      decoration: BoxDecoration(
+        color: Theme.of(context).appBarTheme.backgroundColor,
+        border: Border(
+          right: BorderSide(
+            color: Theme.of(context).dividerColor.withValues(alpha: 0.1),
+          ),
+        ),
+      ),
+      child: const Column(
+        children: [
+          SiloSummaryPanel(),
+          Divider(height: 1),
+          SizedBox(height: 24),
+          SiloControlsPanel(),
         ],
       ),
     );

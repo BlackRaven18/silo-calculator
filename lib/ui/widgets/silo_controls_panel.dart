@@ -13,55 +13,44 @@ class SiloControlsPanel extends StatelessWidget {
     final vm = context.watch<SiloViewModel>();
 
     return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Theme.of(context).scaffoldBackgroundColor,
-        border: Border(
-          top: BorderSide(
-            color: Theme.of(context).dividerColor.withValues(alpha: 0.2),
-            width: 1.5,
-          ),
-        ),
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                'Uprawa: ',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-              const SizedBox(width: 12),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: AppTheme.primaryColor.withValues(alpha: 0.5),
-                  ),
-                ),
-                child: DropdownButton<Grain>(
-                  value: vm.selectedGrain,
-                  underline: const SizedBox(),
-                  onChanged: (grain) => vm.updateGrain(grain!),
-                  items: Grain.defaultGrains.map((g) {
-                    return DropdownMenuItem(
-                      value: g,
-                      child: Text(g.name, style: const TextStyle(fontSize: 16)),
-                    );
-                  }).toList(),
-                ),
-              ),
-              const SizedBox(width: 32),
-              const Text(
-                'Gęstość: ',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-              const SizedBox(width: 12),
-              SiloDensityInput(vm: vm),
-            ],
+          const Text(
+            'Uprawa: ',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
+          const SizedBox(height: 12),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: AppTheme.primaryColor.withValues(alpha: 0.5),
+              ),
+            ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<Grain>(
+                value: vm.selectedGrain,
+                onChanged: (grain) => vm.updateGrain(grain!),
+                items: Grain.defaultGrains.map((g) {
+                  return DropdownMenuItem(
+                    value: g,
+                    child: Text(g.name, style: const TextStyle(fontSize: 16)),
+                  );
+                }).toList(),
+              ),
+            ),
+          ),
+          const SizedBox(height: 24),
+          const Text(
+            'Gęstość: ',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          ),
+          const SizedBox(height: 12),
+          SiloDensityInput(vm: vm),
         ],
       ),
     );

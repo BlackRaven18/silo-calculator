@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../view_models/silo_view_model.dart';
 import '../../core/theme/app_theme.dart';
-import 'silo_summary_panel.dart';
 import 'silo_list_card.dart';
 import '../../core/services/notification_service.dart';
 
@@ -19,7 +18,7 @@ class SiloListPanel extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).appBarTheme.backgroundColor,
         border: Border(
-          left: BorderSide(
+          right: BorderSide(
             color: Theme.of(context).dividerColor.withValues(alpha: 0.1),
           ),
         ),
@@ -27,8 +26,6 @@ class SiloListPanel extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Real-time Results Section
-          const SiloSummaryPanel(),
 
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
