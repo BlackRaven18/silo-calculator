@@ -9,6 +9,7 @@ class SiloViewModel extends ChangeNotifier {
   double _radius = 1.15;
   double _cylinderHeight = 2.85;
   double _hopperHeight = 0.95;
+  double _fillLevel = 0.5; // 0.0 to 1.0
   Grain _selectedGrain = Grain.defaultGrains[0];
   late double _customDensity;
   SiloDimension _focusedDimension = SiloDimension.none;
@@ -22,6 +23,7 @@ class SiloViewModel extends ChangeNotifier {
   double get radius => _radius;
   double get cylinderHeight => _cylinderHeight;
   double get hopperHeight => _hopperHeight;
+  double get fillLevel => _fillLevel;
   Grain get selectedGrain => _selectedGrain;
   double get customDensity => _customDensity;
   SiloDimension get focusedDimension => _focusedDimension;
@@ -40,6 +42,26 @@ class SiloViewModel extends ChangeNotifier {
   double get cylinderTonnage => (cylinderVolume * _customDensity) / 1000;
   double get hopperTonnage => (hopperVolume * _customDensity) / 1000;
 
+  // Fill level calculations
+  double get filledVolume {
+    final totalHeight = _cylinderHeight + _hopperHeight;
+    final filledHeight = _fillLevel * totalHeight;
+
+    if (filledHeight <= _hopperHeight) {
+      // Only in hopper
+      final currentRadius = _radius * (filledHeight / _hopperHeight);
+      return CalculationService.calculateConeVolume(currentRadius, filledHeight);
+    } else {
+      // Hopper is full + some cylinder
+      final cylinderFilledHeight = filledHeight - _hopperHeight;
+      final hopperVol = CalculationService.calculateConeVolume(_radius, _hopperHeight);
+      final cylinderVol = CalculationService.calculateCylinderVolume(_radius, cylinderFilledHeight);
+      return hopperVol + cylinderVol;
+    }
+  }
+
+  double get filledTonnage => (filledVolume * _customDensity) / 1000;
+
   void updateRadius(double value) {
     _radius = value;
     notifyListeners();
@@ -52,6 +74,11 @@ class SiloViewModel extends ChangeNotifier {
 
   void updateHopperHeight(double value) {
     _hopperHeight = value;
+    notifyListeners();
+  }
+
+  void updateFillLevel(double level) {
+    _fillLevel = level.clamp(0.0, 1.0);
     notifyListeners();
   }
 

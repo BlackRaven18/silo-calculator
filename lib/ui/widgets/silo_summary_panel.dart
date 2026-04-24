@@ -17,19 +17,25 @@ class SiloSummaryPanel extends StatelessWidget {
         children: [
           _buildResultLine(
             context,
-            'Ilość zboża:',
-            '${vm.totalTonnage.toStringAsFixed(2)} T',
-            isMain: true,
+            'Ilość zboża (MAX):',
+            _formatWeight(vm.totalTonnage),
           ),
           _buildResultLine(
             context,
+            'Obecna ilość (${(vm.fillLevel * 100).toStringAsFixed(0)}%):',
+            _formatWeight(vm.filledTonnage),
+            isMain: true,
+          ),
+          const Divider(height: 24),
+          _buildResultLine(
+            context,
             ' - walec:',
-            '${vm.cylinderTonnage.toStringAsFixed(2)} T',
+            _formatWeight(vm.cylinderTonnage),
           ),
           _buildResultLine(
             context,
             ' - lejek:',
-            '${vm.hopperTonnage.toStringAsFixed(2)} T',
+            _formatWeight(vm.hopperTonnage),
           ),
           const Divider(height: 24),
           _buildResultLine(
@@ -40,6 +46,13 @@ class SiloSummaryPanel extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String _formatWeight(double tonnes) {
+    if (tonnes < 1.0) {
+      return '${(tonnes * 1000).toStringAsFixed(0)} kg';
+    }
+    return '${tonnes.toStringAsFixed(2)} T';
   }
 
   Widget _buildResultLine(

@@ -26,15 +26,28 @@ class SiloCanvas extends StatelessWidget {
         final pxCylinderHeight = vm.cylinderHeight * scale;
         final pxHopperHeight = vm.hopperHeight * scale;
 
+        final totalSiloPxHeight = pxCylinderHeight + pxHopperHeight;
+        final bottomY = center.dy + (pxCylinderHeight / 2) + pxHopperHeight;
+
+        void updateFillFromPosition(Offset localPosition) {
+          final dyFromBottom = bottomY - localPosition.dy;
+          final percent = dyFromBottom / totalSiloPxHeight;
+          vm.updateFillLevel(percent);
+        }
+
         return Stack(
           children: [
             // The Drawing
-            Positioned.fill(
+            GestureDetector(
+              onTapDown: (details) => updateFillFromPosition(details.localPosition),
+              onPanUpdate: (details) => updateFillFromPosition(details.localPosition),
               child: CustomPaint(
+                size: Size.infinite,
                 painter: SiloPainter(
                   radius: vm.radius,
                   cylinderHeight: vm.cylinderHeight,
                   hopperHeight: vm.hopperHeight,
+                  fillLevel: vm.fillLevel,
                   isDarkMode: isDark,
                   focusedDimension: vm.focusedDimension,
                 ),

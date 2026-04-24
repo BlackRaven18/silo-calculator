@@ -6,6 +6,7 @@ class SiloPainter extends CustomPainter {
   final double radius;
   final double cylinderHeight;
   final double hopperHeight;
+  final double fillLevel;
   final bool isDarkMode;
   final SiloDimension focusedDimension;
 
@@ -13,6 +14,7 @@ class SiloPainter extends CustomPainter {
     required this.radius,
     required this.cylinderHeight,
     required this.hopperHeight,
+    required this.fillLevel,
     required this.isDarkMode,
     this.focusedDimension = SiloDimension.none,
   });
@@ -66,6 +68,65 @@ class SiloPainter extends CustomPainter {
       center.dy + (pxCylinderHeight / 2) + pxHopperHeight,
     );
     siloPath.lineTo(center.dx + pxRadius, center.dy + (pxCylinderHeight / 2));
+
+    // --- GRAIN FILL DRAWING ---
+    final fillBottomY = center.dy + (pxCylinderHeight / 2) + pxHopperHeight;
+    final totalPxHeight = pxCylinderHeight + pxHopperHeight;
+    final fillTopY = fillBottomY - (totalPxHeight * fillLevel);
+
+    canvas.save();
+    canvas.clipPath(siloPath);
+
+    final grainPaint = Paint()
+      ..color = const Color(0xFFB8860B).withValues(alpha: 0.8)
+      ..style = PaintingStyle.fill;
+
+    canvas.drawRect(
+      Rect.fromLTRB(
+        center.dx - pxRadius,
+        fillTopY,
+        center.dx + pxRadius,
+        fillBottomY,
+      ),
+      grainPaint,
+    );
+    canvas.restore();
+
+    // Fill level line
+    final fillLinePaint = Paint()
+      ..color = Colors.blue.withValues(alpha: 0.8)
+      ..strokeWidth = 2.0
+      ..style = PaintingStyle.stroke;
+
+    _drawDashedLine(
+      canvas,
+      center.dx - pxRadius - 40,
+      center.dx + pxRadius + 40,
+      fillTopY,
+      fillLinePaint,
+    );
+
+    final guidingLinePaint = Paint()
+      ..color = isDarkMode ? Colors.white10 : Colors.black12
+      ..strokeWidth = 1.0
+      ..style = PaintingStyle.stroke;
+
+    final cylinderTopY = center.dy - (pxCylinderHeight / 2);
+
+    _drawDashedLine(
+      canvas,
+      center.dx - pxRadius,
+      center.dx + pxRadius,
+      cylinderTopY + (pxCylinderHeight / 3),
+      guidingLinePaint,
+    );
+    _drawDashedLine(
+      canvas,
+      center.dx - pxRadius,
+      center.dx + pxRadius,
+      cylinderTopY + (2 * pxCylinderHeight / 3),
+      guidingLinePaint,
+    );
 
     // Draw shadows/fills
     canvas.drawPath(siloPath, fillPaint);
@@ -165,7 +226,24 @@ class SiloPainter extends CustomPainter {
     return oldDelegate.radius != radius ||
         oldDelegate.cylinderHeight != cylinderHeight ||
         oldDelegate.hopperHeight != hopperHeight ||
+        oldDelegate.fillLevel != fillLevel || // Added
         oldDelegate.isDarkMode != isDarkMode ||
         oldDelegate.focusedDimension != focusedDimension;
+  }
+
+  void _drawDashedLine(
+    Canvas canvas,
+    double x1,
+    double x2,
+    double y,
+    Paint paint,
+  ) {
+    const dashWidth = 8.0;
+    const dashSpace = 6.0;
+    double startX = x1;
+    while (startX < x2) {
+      canvas.drawLine(Offset(startX, y), Offset(startX + dashWidth, y), paint);
+      startX += dashWidth + dashSpace;
+    }
   }
 }
