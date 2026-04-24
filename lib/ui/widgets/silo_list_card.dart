@@ -67,14 +67,18 @@ class SiloListCard extends StatelessWidget {
               const SizedBox(width: 6),
               Text(
                 silo.grainName,
-                style: const TextStyle(fontSize: 13, color: Colors.grey),
+                style: TextStyle(
+                  fontSize: 13,
+                  color: Theme.of(context).brightness == Brightness.light ? Colors.black54 : Colors.white70,
+                ),
               ),
             ],
           ),
           const Divider(height: 24),
-          _buildInfoRow('Max:', _formatWeight(silo.maxTonnage), isBold: false),
+          _buildInfoRow(context, 'Max:', _formatWeight(silo.maxTonnage), isBold: false),
           const SizedBox(height: 4),
           _buildInfoRow(
+            context,
             'Obecnie (${(silo.fillLevel * 100).toStringAsFixed(0)}%):',
             _formatWeight(silo.tonnage),
             isBold: true,
@@ -82,7 +86,10 @@ class SiloListCard extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             'r: ${silo.radius}m, h1: ${silo.cylinderHeight}m, h2: ${silo.hopperHeight}m',
-            style: const TextStyle(fontSize: 10, color: Colors.grey),
+            style: TextStyle(
+              fontSize: 10,
+              color: Theme.of(context).brightness == Brightness.light ? Colors.black45 : Colors.white54,
+            ),
           ),
         ],
       ),
@@ -90,19 +97,23 @@ class SiloListCard extends StatelessWidget {
    );
   }
 
-  Widget _buildInfoRow(String label, String value, {required bool isBold}) {
+  Widget _buildInfoRow(BuildContext context, String label, String value, {required bool isBold}) {
+    final labelColor = Theme.of(context).brightness == Brightness.light 
+        ? Colors.black87.withValues(alpha: 0.6) 
+        : Colors.white70;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           label,
-          style: const TextStyle(fontSize: 12, color: Colors.grey),
+          style: TextStyle(fontSize: 12, color: labelColor),
         ),
         Text(
           value,
           style: TextStyle(
             fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-            color: isBold ? AppTheme.primaryColor : null,
+            color: isBold ? AppTheme.primaryColor : (Theme.of(context).brightness == Brightness.light ? Colors.black87 : Colors.white),
             fontSize: isBold ? 16 : 14,
           ),
         ),

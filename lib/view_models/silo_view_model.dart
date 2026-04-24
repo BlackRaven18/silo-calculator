@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/grain.dart';
 import '../models/silo.dart';
 import '../services/calculation_service.dart';
+import '../core/services/storage_service.dart';
 
 enum SiloDimension { none, radius, cylinderHeight, hopperHeight }
 
@@ -16,6 +17,20 @@ class SiloViewModel extends ChangeNotifier {
 
   SiloViewModel() {
     _customDensity = _selectedGrain.density;
+    _loadFromStorage();
+  }
+
+  Future<void> _loadFromStorage() async {
+    final loadedSilos = await StorageService.loadSilos();
+    if (loadedSilos.isNotEmpty) {
+      _savedSilos.clear();
+      _savedSilos.addAll(loadedSilos);
+      notifyListeners();
+    }
+  }
+
+  void _saveToStorage() {
+    StorageService.saveSilos(_savedSilos);
   }
 
   final List<Silo> _savedSilos = [];
@@ -126,6 +141,7 @@ class SiloViewModel extends ChangeNotifier {
     );
     _savedSilos.add(newSilo);
     _selectedSiloId = newSilo.id;
+    _saveToStorage();
     notifyListeners();
   }
 
@@ -145,6 +161,7 @@ class SiloViewModel extends ChangeNotifier {
         maxTonnage: totalTonnage,
         fillLevel: _fillLevel,
       );
+      _saveToStorage();
       notifyListeners();
     }
   }
@@ -176,6 +193,7 @@ class SiloViewModel extends ChangeNotifier {
       _selectedSiloId = null;
     }
     _savedSilos.removeWhere((s) => s.id == id);
+    _saveToStorage();
     notifyListeners();
   }
 
@@ -195,6 +213,7 @@ class SiloViewModel extends ChangeNotifier {
         maxTonnage: oldSilo.maxTonnage,
         fillLevel: oldSilo.fillLevel,
       );
+      _saveToStorage();
       notifyListeners();
     }
   }
