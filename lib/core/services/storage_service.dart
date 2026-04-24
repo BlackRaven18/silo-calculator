@@ -6,6 +6,7 @@ import '../../models/silo.dart';
 class StorageService {
   static const String _keyTheme = 'theme_mode';
   static const String _keySilos = 'saved_silos';
+  static const String _keyLanguage = 'language_code';
 
   static Future<void> saveThemeMode(ThemeMode mode) async {
     final prefs = await SharedPreferences.getInstance();
@@ -20,6 +21,16 @@ class StorageService {
       (m) => m.name == themeName,
       orElse: () => ThemeMode.system,
     );
+  }
+
+  static Future<void> saveLanguage(String langCode) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_keyLanguage, langCode);
+  }
+
+  static Future<String> loadLanguage() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_keyLanguage) ?? 'pl';
   }
 
   static Future<void> saveSilos(List<Silo> silos) async {

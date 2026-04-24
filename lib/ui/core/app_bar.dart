@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../view_models/settings_view_model.dart';
+import 'package:silo_calculator/core/services/l10n_service.dart';
 
 class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -16,8 +17,9 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final settingsViewModel = context.read<SettingsViewModel>();
+    final settingsViewModel = context.watch<SettingsViewModel>();
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final langCode = settingsViewModel.languageCode;
 
     return Container(
       height: preferredSize.height,
@@ -38,7 +40,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
               constraints: const BoxConstraints(),
               onPressed: () => Scaffold.of(context).openDrawer(),
               icon: const Icon(Icons.settings_suggest_outlined),
-              tooltip: 'Ustawienia i wyniki',
+              tooltip: context.l10n.language,
             ),
           if (showDrawerButton) const SizedBox(width: 12),
           Expanded(
@@ -59,13 +61,21 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ? Icons.wb_sunny_outlined
                   : Icons.nightlight_round_outlined,
             ),
-            tooltip: isDark ? 'Tryb jasny' : 'Tryb ciemny',
+            tooltip: isDark
+                ? context.l10n.theme_light
+                : context.l10n.theme_dark,
+          ),
+          IconButton(
+            onPressed: () =>
+                settingsViewModel.setLanguage(langCode == 'pl' ? 'en' : 'pl'),
+            icon: const Icon(Icons.language),
+            tooltip: context.l10n.language,
           ),
           if (showMenuButton)
             IconButton(
               onPressed: () => Scaffold.of(context).openEndDrawer(),
               icon: const Icon(Icons.menu_open),
-              tooltip: 'Zapisane silosy',
+              tooltip: context.l10n.my_silos,
             ),
         ],
       ),

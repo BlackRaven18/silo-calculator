@@ -4,6 +4,7 @@ import '../../view_models/silo_view_model.dart';
 import '../../core/theme/app_theme.dart';
 import 'silo_list_card.dart';
 import '../../core/services/notification_service.dart';
+import 'package:silo_calculator/core/services/l10n_service.dart';
 
 class SiloListPanel extends StatelessWidget {
   const SiloListPanel({super.key});
@@ -26,7 +27,6 @@ class SiloListPanel extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
             decoration: BoxDecoration(
@@ -48,9 +48,9 @@ class SiloListPanel extends StatelessWidget {
                   size: 20,
                 ),
                 const SizedBox(width: 12),
-                const Text(
-                  'MOJE SILOSY',
-                  style: TextStyle(
+                Text(
+                  context.l10n.my_silos.toUpperCase(),
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1.2,
                     fontSize: 14,
@@ -80,7 +80,7 @@ class SiloListPanel extends StatelessWidget {
           ),
           Expanded(
             child: savedSilos.isEmpty
-                ? _buildEmptyState()
+                ? _buildEmptyState(context)
                 : ListView.separated(
                     padding: const EdgeInsets.all(16),
                     itemCount: savedSilos.length,
@@ -96,7 +96,7 @@ class SiloListPanel extends StatelessWidget {
                           vm.deleteSilo(silo.id);
                           NotificationService.show(
                             context,
-                            'Silos został usunięty.',
+                            context.l10n.delete_silo,
                           );
                         },
                       );
@@ -108,7 +108,7 @@ class SiloListPanel extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -118,15 +118,9 @@ class SiloListPanel extends StatelessWidget {
           color: Colors.grey.withValues(alpha: 0.3),
         ),
         const SizedBox(height: 16),
-        const Text(
-          'Brak zapisanych silosów',
-          style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w500),
-        ),
-        const SizedBox(height: 8),
-        const Text(
-          'Skonfiguruj parametry i kliknij Zapisz',
-          textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.grey, fontSize: 12),
+        Text(
+          context.l10n.no_silos,
+          style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.w500),
         ),
       ],
     );

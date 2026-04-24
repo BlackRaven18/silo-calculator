@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../core/services/notification_service.dart';
 import '../../core/theme/app_theme.dart';
 import '../../view_models/silo_view_model.dart';
+import 'package:silo_calculator/core/services/l10n_service.dart';
 import 'create_silo_dialog.dart';
 import 'rename_silo_dialog.dart';
 import 'silo_painter.dart';
@@ -26,8 +27,9 @@ class _SiloCanvasState extends State<SiloCanvas> {
       final double newScale = (currentScale + delta).clamp(0.5, 4.0);
       final double scaleMultiplier = newScale / currentScale;
 
-      // Zoom towards center
-      matrix.multiply(Matrix4.diagonal3Values(scaleMultiplier, scaleMultiplier, 1.0));
+      matrix.multiply(
+        Matrix4.diagonal3Values(scaleMultiplier, scaleMultiplier, 1.0),
+      );
       _transformationController.value = matrix;
     });
   }
@@ -51,14 +53,14 @@ class _SiloCanvasState extends State<SiloCanvas> {
           constraints.maxHeight / 2,
         );
 
-        // Calculate scale to fit both height and width
         final totalPhysicalHeight = vm.cylinderHeight + vm.hopperHeight + 1.2;
-        
-        // Dynamic labels space calculation
-        final sidePadding = isMobile ? 120.0 : 180.0; // Px for labels on one side
-        
-        final scaleHeight = (constraints.maxHeight * 0.75) / totalPhysicalHeight;
-        final scaleWidth = (constraints.maxWidth - (sidePadding * 2)) / (vm.radius * 2);
+
+        final sidePadding = isMobile ? 120.0 : 180.0;
+
+        final scaleHeight =
+            (constraints.maxHeight * 0.75) / totalPhysicalHeight;
+        final scaleWidth =
+            (constraints.maxWidth - (sidePadding * 2)) / (vm.radius * 2);
         final scale = scaleHeight < scaleWidth ? scaleHeight : scaleWidth;
 
         final pxRadius = vm.radius * scale;
@@ -124,7 +126,9 @@ class _SiloCanvasState extends State<SiloCanvas> {
                   // CYLINDER HEIGHT Input (h1)
                   Positioned(
                     left: center.dx - pxRadius - labelWidth - hOffset,
-                    top: center.dy - (isMobile ? 18 : 22), // Perfectly centered on h1 bar
+                    top:
+                        center.dy -
+                        (isMobile ? 18 : 22), // Perfectly centered on h1 bar
                     child: SiloInputChip(
                       dimension: SiloDimension.cylinderHeight,
                       label: 'h1',
@@ -138,7 +142,8 @@ class _SiloCanvasState extends State<SiloCanvas> {
                   // HOPPER HEIGHT Input (h2)
                   Positioned(
                     left: center.dx - pxRadius - labelWidth - hOffset,
-                    top: center.dy +
+                    top:
+                        center.dy +
                         (pxCylinderHeight / 2) +
                         (pxHopperHeight / 2) -
                         (isMobile ? 18 : 22), // Perfectly centered on h2 bar
@@ -219,7 +224,7 @@ class _SiloCanvasState extends State<SiloCanvas> {
                 vm.updateSelectedSilo();
                 NotificationService.show(
                   context,
-                  'Zaktualizowano silos: ${vm.selectedSilo?.name}',
+                  '${context.l10n.silo_saved}${vm.selectedSilo?.name}',
                 );
               } else {
                 showDialog(
@@ -233,7 +238,9 @@ class _SiloCanvasState extends State<SiloCanvas> {
               size: isMobile ? 16 : 18,
             ),
             label: Text(
-              vm.selectedSiloId != null ? 'ZAKTUALIZUJ' : 'ZAPISZ SILOS',
+              vm.selectedSiloId != null
+                  ? context.l10n.update_silo
+                  : context.l10n.save_silo,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: isMobile ? 11 : 13,
@@ -258,7 +265,7 @@ class _SiloCanvasState extends State<SiloCanvas> {
             IconButton(
               onPressed: () => vm.createNewSilo(),
               icon: Icon(Icons.add, size: isMobile ? 20 : 24),
-              tooltip: 'Nowy silos',
+              tooltip: context.l10n.new_silo,
               style: IconButton.styleFrom(
                 backgroundColor: Colors.white,
                 foregroundColor: AppTheme.primaryColor,

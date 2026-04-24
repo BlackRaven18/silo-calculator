@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../core/theme/app_theme.dart';
 import '../../view_models/silo_view_model.dart';
 import '../../core/services/notification_service.dart';
+import 'package:silo_calculator/core/services/l10n_service.dart';
 
 class RenameSiloDialog extends StatefulWidget {
   final SiloViewModel vm;
@@ -30,21 +31,26 @@ class _RenameSiloDialogState extends State<RenameSiloDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Zmień nazwę'),
+      title: Text(context.l10n.rename_silo),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Podaj nową nazwę:'),
+          Text(context.l10n.provide_new_name),
           const SizedBox(height: 16),
           TextField(
             controller: _controller,
             autofocus: true,
             decoration: InputDecoration(
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: AppTheme.primaryColor, width: 2),
+                borderSide: const BorderSide(
+                  color: AppTheme.primaryColor,
+                  width: 2,
+                ),
               ),
             ),
             onSubmitted: (_) => _confirm(),
@@ -54,16 +60,21 @@ class _RenameSiloDialogState extends State<RenameSiloDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('ANULUJ', style: TextStyle(color: Colors.grey)),
+          child: Text(
+            context.l10n.cancel.toUpperCase(),
+            style: const TextStyle(color: Colors.grey),
+          ),
         ),
         ElevatedButton(
           onPressed: _confirm,
           style: ElevatedButton.styleFrom(
             backgroundColor: AppTheme.primaryColor,
             foregroundColor: Colors.white,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
           ),
-          child: const Text('ZMIEŃ'),
+          child: Text(context.l10n.change.toUpperCase()),
         ),
       ],
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -76,7 +87,7 @@ class _RenameSiloDialogState extends State<RenameSiloDialog> {
       Navigator.pop(context);
       NotificationService.show(
         context,
-        'Nazwa została zmieniona na: ${_controller.text}',
+        '${context.l10n.name_changed_to}${_controller.text}',
       );
     }
   }

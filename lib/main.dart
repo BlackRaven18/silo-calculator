@@ -4,6 +4,7 @@ import 'core/theme/app_theme.dart';
 import 'view_models/settings_view_model.dart';
 import 'view_models/silo_view_model.dart';
 import 'ui/views/home_view.dart';
+import 'package:silo_calculator/generated/app_localizations.dart';
 
 void main() {
   runApp(
@@ -25,11 +26,14 @@ class MainApp extends StatelessWidget {
     final settingsViewModel = context.watch<SettingsViewModel>();
 
     return MaterialApp(
-      title: 'Silo Calculator',
+      onGenerateTitle: (context) => AppLocalizations.of(context)!.app_title,
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: settingsViewModel.themeMode,
+      locale: Locale(settingsViewModel.languageCode),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: const HomeView(),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:silo_calculator/core/services/l10n_service.dart';
 import 'package:provider/provider.dart';
 import '../../view_models/silo_view_model.dart';
 import '../../core/theme/app_theme.dart';
@@ -17,9 +18,9 @@ class SiloControlsPanel extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Uprawa: ',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          Text(
+            context.l10n.crop,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
           const SizedBox(height: 12),
           Container(
@@ -38,16 +39,16 @@ class SiloControlsPanel extends StatelessWidget {
                 items: Grain.defaultGrains.map((g) {
                   return DropdownMenuItem(
                     value: g,
-                    child: Text(g.name, style: const TextStyle(fontSize: 16)),
+                    child: Text(context.l10n.getLocalizedGrainName(g.name), style: const TextStyle(fontSize: 16)),
                   );
                 }).toList(),
               ),
             ),
           ),
           const SizedBox(height: 24),
-          const Text(
-            'Gęstość: ',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          Text(
+            context.l10n.density,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
           const SizedBox(height: 12),
           SiloDensityInput(vm: vm),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../view_models/silo_view_model.dart';
 import '../../core/theme/app_theme.dart';
+import 'package:silo_calculator/core/services/l10n_service.dart';
 
 class SiloSummaryPanel extends StatelessWidget {
   const SiloSummaryPanel({super.key});
@@ -17,42 +18,68 @@ class SiloSummaryPanel extends StatelessWidget {
         children: [
           _buildResultLine(
             context,
-            'Ilość zboża (MAX):',
-            _formatWeight(vm.totalTonnage),
+            context.l10n.grain_max,
+            _formatWeight(vm.totalTonnage, context),
           ),
           _buildResultLine(
             context,
-            'Obecna ilość (${(vm.fillLevel * 100).toStringAsFixed(0)}%):',
-            _formatWeight(vm.filledTonnage),
+            '${context.l10n.current_amount} (${(vm.fillLevel * 100).toStringAsFixed(0)}%):',
+            _formatWeight(vm.filledTonnage, context),
             isMain: true,
           ),
           const Divider(height: 24),
           _buildResultLine(
             context,
-            ' - walec:',
-            _formatWeight(vm.cylinderTonnage),
+            ' - ${context.l10n.cylinder}:',
+            _formatWeight(vm.cylinderTonnage, context),
           ),
           _buildResultLine(
             context,
-            ' - lejek:',
-            _formatWeight(vm.hopperTonnage),
+            ' - ${context.l10n.hopper}:',
+            _formatWeight(vm.hopperTonnage, context),
           ),
           const Divider(height: 24),
           _buildResultLine(
             context,
-            'Pojemność:',
+            '${context.l10n.capacity}:',
             '${vm.totalVolume.toStringAsFixed(2)} m³',
+          ),
+          const SizedBox(height: 16),
+          Builder(
+            builder: (context) {
+              final color = Theme.of(context).brightness == Brightness.light 
+                 ? Colors.black54 
+                 : Colors.white54;
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(Icons.info_outline, size: 14, color: color),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      context.l10n.tonnage_disclaimer,
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: color,
+                        fontStyle: FontStyle.italic,
+                        height: 1.3,
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            }
           ),
         ],
       ),
     );
   }
 
-  String _formatWeight(double tonnes) {
+  String _formatWeight(double tonnes, BuildContext context) {
     if (tonnes < 1.0) {
       return '${(tonnes * 1000).toStringAsFixed(0)} kg';
     }
-    return '${tonnes.toStringAsFixed(2)} T';
+    return '${tonnes.toStringAsFixed(2)} ${context.l10n.tonnes}';
   }
 
   Widget _buildResultLine(

@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
-
 import '../core/services/storage_service.dart';
 
 class SettingsViewModel extends ChangeNotifier {
   ThemeMode _themeMode = ThemeMode.system;
+  String _languageCode = 'pl';
 
   SettingsViewModel() {
-    _loadTheme();
+    _loadSettings();
   }
 
   ThemeMode get themeMode => _themeMode;
+  String get languageCode => _languageCode;
 
-  Future<void> _loadTheme() async {
+  Future<void> _loadSettings() async {
     _themeMode = await StorageService.loadThemeMode();
+    _languageCode = await StorageService.loadLanguage();
     notifyListeners();
   }
 
@@ -24,5 +26,13 @@ class SettingsViewModel extends ChangeNotifier {
     }
     StorageService.saveThemeMode(_themeMode);
     notifyListeners();
+  }
+
+  void setLanguage(String code) {
+    if (_languageCode != code) {
+      _languageCode = code;
+      StorageService.saveLanguage(code);
+      notifyListeners();
+    }
   }
 }
