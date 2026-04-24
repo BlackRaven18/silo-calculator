@@ -21,19 +21,19 @@ class _SiloDensityInputState extends State<SiloDensityInput> {
     _controller = TextEditingController(
       text: widget.vm.customDensity.toStringAsFixed(0),
     );
+    widget.vm.addListener(_onViewModelChange);
   }
 
-  @override
-  void didUpdateWidget(SiloDensityInput oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.vm.customDensity != widget.vm.customDensity &&
-        !FocusScope.of(context).hasFocus) {
-      _controller.text = widget.vm.customDensity.toStringAsFixed(0);
+  void _onViewModelChange() {
+    final newText = widget.vm.customDensity.toStringAsFixed(0);
+    if (_controller.text != newText && !FocusScope.of(context).hasFocus) {
+      _controller.text = newText;
     }
   }
 
   @override
   void dispose() {
+    widget.vm.removeListener(_onViewModelChange);
     _controller.dispose();
     super.dispose();
   }

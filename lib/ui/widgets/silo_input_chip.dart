@@ -20,6 +20,19 @@ class DecimalInputFormatter extends TextInputFormatter {
       return oldValue;
     }
 
+    if (text.length > 1 && text.startsWith('0') && text[1] != '.') {
+      String newText = text;
+      while (newText.length > 1 &&
+          newText.startsWith('0') &&
+          newText[1] != '.') {
+        newText = newText.substring(1);
+      }
+      return newValue.copyWith(
+        text: newText,
+        selection: TextSelection.collapsed(offset: newText.length),
+      );
+    }
+
     return newValue.copyWith(text: text);
   }
 }
