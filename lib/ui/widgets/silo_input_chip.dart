@@ -4,6 +4,11 @@ import '../../core/theme/app_theme.dart';
 import 'package:flutter/services.dart';
 
 class DecimalInputFormatter extends TextInputFormatter {
+  final int maxBefore;
+  final int maxAfter;
+
+  DecimalInputFormatter({this.maxBefore = 3, this.maxAfter = 2});
+
   @override
   TextEditingValue formatEditUpdate(
     TextEditingValue oldValue,
@@ -15,7 +20,7 @@ class DecimalInputFormatter extends TextInputFormatter {
       return oldValue;
     }
 
-    final regExp = RegExp(r'^\d*\.?\d{0,2}$');
+    final regExp = RegExp('^\\d{0,$maxBefore}(\\.\\d{0,$maxAfter})?\$');
     if (text.isNotEmpty && !regExp.hasMatch(text)) {
       return oldValue;
     }
@@ -90,11 +95,16 @@ class _SiloInputChipState extends State<SiloInputChip> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Focus(
-      onFocusChange: (hasNextFocus) {
-        if (hasNextFocus) {
+      onFocusChange: (hasFocus) {
+        if (hasFocus) {
           widget.vm.setFocusedDimension(widget.dimension);
-        } else if (widget.vm.focusedDimension == widget.dimension) {
-          widget.vm.setFocusedDimension(SiloDimension.none);
+        } else {
+          if (widget.vm.focusedDimension == widget.dimension) {
+            widget.vm.setFocusedDimension(SiloDimension.none);
+          }
+          _controller.text = widget.value
+              .toStringAsFixed(2)
+              .replaceAll('.00', '');
         }
       },
       child: Container(
@@ -114,7 +124,9 @@ class _SiloInputChipState extends State<SiloInputChip> {
             color: isFocused
                 ? AppTheme.accentColor
                 : AppTheme.primaryColor.withValues(alpha: 0.3),
-            width: isFocused ? (widget.isSmall ? 2 : 3) : (widget.isSmall ? 1 : 2),
+            width: isFocused
+                ? (widget.isSmall ? 2 : 3)
+                : (widget.isSmall ? 1 : 2),
           ),
           boxShadow: [
             if (isFocused)
@@ -158,10 +170,19 @@ class _SiloInputChipState extends State<SiloInputChip> {
                   contentPadding: EdgeInsets.zero,
                   border: InputBorder.none,
                 ),
+                onFieldSubmitted: (text) {
+                  final newValue = double.tryParse(text);
+                  if (newValue != null) {
+                    widget.onChanged(newValue);
+                  }
+                  _controller.text = widget.value
+                      .toStringAsFixed(2)
+                      .replaceAll('.00', '');
+                },
                 onChanged: (text) {
                   if (text.isEmpty) return;
                   final newValue = double.tryParse(text);
-                  if (newValue != null && newValue >= 0 && newValue <= 100) {
+                  if (newValue != null && newValue >= 0) {
                     widget.onChanged(newValue);
                   }
                 },

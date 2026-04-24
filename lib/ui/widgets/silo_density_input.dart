@@ -50,7 +50,7 @@ class _SiloDensityInputState extends State<SiloDensityInput> {
       child: TextFormField(
         controller: _controller,
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
-        inputFormatters: [DecimalInputFormatter()],
+        inputFormatters: [DecimalInputFormatter(maxBefore: 4, maxAfter: 2)],
         style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         textAlign: TextAlign.center,
         decoration: const InputDecoration(

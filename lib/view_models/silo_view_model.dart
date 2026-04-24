@@ -93,17 +93,17 @@ class SiloViewModel extends ChangeNotifier {
   double get filledTonnage => (filledVolume * _customDensity) / 1000;
 
   void updateRadius(double value) {
-    _radius = value;
+    _radius = value.clamp(0.4, 20.0);
     notifyListeners();
   }
 
   void updateCylinderHeight(double value) {
-    _cylinderHeight = value;
+    _cylinderHeight = value.clamp(0.4, 20.0);
     notifyListeners();
   }
 
   void updateHopperHeight(double value) {
-    _hopperHeight = value;
+    _hopperHeight = value.clamp(0.4, 20.0);
     notifyListeners();
   }
 
