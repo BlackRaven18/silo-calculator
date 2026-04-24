@@ -32,6 +32,16 @@ class LanguageSelector extends StatelessWidget {
           ),
         ),
         PopupMenuItem<String>(
+          value: 'uk',
+          child: Row(
+            children: [
+              Text(_getFlag('uk')),
+              const SizedBox(width: 12),
+              Text(context.l10n.uk),
+            ],
+          ),
+        ),
+        PopupMenuItem<String>(
           value: 'en',
           child: Row(
             children: [
@@ -48,6 +58,16 @@ class LanguageSelector extends StatelessWidget {
               Text(_getFlag('es')),
               const SizedBox(width: 12),
               Text(context.l10n.es),
+            ],
+          ),
+        ),
+        PopupMenuItem<String>(
+          value: 'pt',
+          child: Row(
+            children: [
+              Text(_getFlag('pt')),
+              const SizedBox(width: 12),
+              Text(context.l10n.pt),
             ],
           ),
         ),
@@ -69,10 +89,14 @@ class LanguageSelector extends StatelessWidget {
     switch (code) {
       case 'pl':
         return '🇵🇱';
+      case 'uk':
+        return '🇺🇦';
       case 'en':
         return '🇬🇧';
       case 'es':
         return '🇪🇸';
+      case 'pt':
+        return '🇵🇹';
       case 'de':
         return '🇩🇪';
       default:

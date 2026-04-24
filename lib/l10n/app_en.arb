@@ -32,6 +32,8 @@
   "en": "English",
   "es": "Español",
   "de": "German",
+  "uk": "Ukrainian",
+  "pt": "Portuguese",
   "save_silo_dialog_title": "Save silo",
   "default_silo_name": "Silo",
   "provide_silo_name": "Enter name for this record:",

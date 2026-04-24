@@ -108,6 +108,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get de => 'Deutsch';
 
   @override
+  String get uk => 'Ukrainisch';
+
+  @override
+  String get pt => 'Portugiesisch';
+
+  @override
   String get save_silo_dialog_title => 'Silo speichern';
 
   @override

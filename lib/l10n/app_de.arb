@@ -32,6 +32,8 @@
   "en": "Englisch",
   "es": "Spanisch",
   "de": "Deutsch",
+  "uk": "Ukrainisch",
+  "pt": "Portugiesisch",
   "save_silo_dialog_title": "Silo speichern",
   "default_silo_name": "Silo",
   "provide_silo_name": "Geben Sie einen Namen für diesen Datensatz ein:",

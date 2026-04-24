@@ -9,6 +9,8 @@ import 'app_localizations_de.dart';
 import 'app_localizations_en.dart';
 import 'app_localizations_es.dart';
 import 'app_localizations_pl.dart';
+import 'app_localizations_pt.dart';
+import 'app_localizations_uk.dart';
 
 // ignore_for_file: type=lint
 
@@ -100,6 +102,8 @@ abstract class AppLocalizations {
     Locale('en'),
     Locale('es'),
     Locale('pl'),
+    Locale('pt'),
+    Locale('uk'),
   ];
 
   /// No description provided for @app_title.
@@ -300,6 +304,18 @@ abstract class AppLocalizations {
   /// **'German'**
   String get de;
 
+  /// No description provided for @uk.
+  ///
+  /// In en, this message translates to:
+  /// **'Ukrainian'**
+  String get uk;
+
+  /// No description provided for @pt.
+  ///
+  /// In en, this message translates to:
+  /// **'Portuguese'**
+  String get pt;
+
   /// No description provided for @save_silo_dialog_title.
   ///
   /// In en, this message translates to:
@@ -467,8 +483,14 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['de', 'en', 'es', 'pl'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>[
+    'de',
+    'en',
+    'es',
+    'pl',
+    'pt',
+    'uk',
+  ].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -485,6 +507,10 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsEs();
     case 'pl':
       return AppLocalizationsPl();
+    case 'pt':
+      return AppLocalizationsPt();
+    case 'uk':
+      return AppLocalizationsUk();
   }
 
   throw FlutterError(

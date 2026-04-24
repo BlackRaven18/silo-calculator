@@ -108,6 +108,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get de => 'Alemán';
 
   @override
+  String get uk => 'Ucraniano';
+
+  @override
+  String get pt => 'Português';
+
+  @override
   String get save_silo_dialog_title => 'Guardar silo';
 
   @override
