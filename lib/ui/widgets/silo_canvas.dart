@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../core/services/notification_service.dart';
+import '../../core/theme/app_theme.dart';
 import '../../view_models/silo_view_model.dart';
+import 'create_silo_dialog.dart';
+import 'rename_silo_dialog.dart';
 import 'silo_painter.dart';
 import 'silo_input_chip.dart';
 
@@ -39,8 +43,10 @@ class SiloCanvas extends StatelessWidget {
           children: [
             // The Drawing
             GestureDetector(
-              onTapDown: (details) => updateFillFromPosition(details.localPosition),
-              onPanUpdate: (details) => updateFillFromPosition(details.localPosition),
+              onTapDown: (details) =>
+                  updateFillFromPosition(details.localPosition),
+              onPanUpdate: (details) =>
+                  updateFillFromPosition(details.localPosition),
               child: CustomPaint(
                 size: Size.infinite,
                 painter: SiloPainter(
@@ -53,6 +59,10 @@ class SiloCanvas extends StatelessWidget {
                 ),
               ),
             ),
+
+            _buildActionButtons(context, vm),
+
+            _buildSelectedSiloName(context, vm),
 
             // Editable Labels Overlay
 
@@ -97,6 +107,103 @@ class SiloCanvas extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+
+  Widget _buildActionButtons(BuildContext context, SiloViewModel vm) {
+    return Positioned(
+      top: 20,
+      left: 20,
+      child: Row(
+        children: [
+          ElevatedButton.icon(
+            onPressed: () {
+              if (vm.selectedSiloId != null) {
+                vm.updateSelectedSilo();
+                NotificationService.show(
+                  context,
+                  'Zaktualizowano silos: ${vm.selectedSilo?.name}',
+                );
+              } else {
+                showDialog(
+                  context: context,
+                  builder: (context) => CreateSiloDialog(vm: vm),
+                );
+              }
+            },
+            icon: Icon(
+              vm.selectedSiloId != null ? Icons.save : Icons.add_task,
+              size: 18,
+            ),
+            label: Text(
+              vm.selectedSiloId != null ? 'ZAKTUALIZUJ' : 'ZAPISZ SILOS',
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.primaryColor.withValues(alpha: 0.9),
+              foregroundColor: Colors.white,
+              elevation: 8,
+              shadowColor: Colors.black45,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
+          ),
+          if (vm.selectedSiloId != null) ...[
+            const SizedBox(width: 12),
+            IconButton(
+              onPressed: () => vm.createNewSilo(),
+              icon: const Icon(Icons.add),
+              tooltip: 'Nowy silos',
+              style: IconButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: AppTheme.primaryColor,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSelectedSiloName(BuildContext context, SiloViewModel vm) {
+    if (vm.selectedSiloId == null) return const SizedBox.shrink();
+
+    return Positioned(
+      top: 25,
+      right: 20,
+      child: GestureDetector(
+        onTap: () => showDialog(
+          context: context,
+          builder: (context) => RenameSiloDialog(vm: vm),
+        ),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(
+            color: AppTheme.primaryColor.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: AppTheme.primaryColor.withValues(alpha: 0.2),
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.edit, size: 16, color: AppTheme.primaryColor),
+              const SizedBox(width: 8),
+              Text(
+                vm.selectedSilo?.name ?? '',
+                style: const TextStyle(
+                  color: AppTheme.primaryColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

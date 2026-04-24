@@ -19,6 +19,7 @@ class SiloViewModel extends ChangeNotifier {
   }
 
   final List<Silo> _savedSilos = [];
+  String? _selectedSiloId;
 
   double get radius => _radius;
   double get cylinderHeight => _cylinderHeight;
@@ -28,6 +29,11 @@ class SiloViewModel extends ChangeNotifier {
   double get customDensity => _customDensity;
   SiloDimension get focusedDimension => _focusedDimension;
   List<Silo> get savedSilos => _savedSilos;
+  String? get selectedSiloId => _selectedSiloId;
+
+  Silo? get selectedSilo => _selectedSiloId == null
+      ? null
+      : _savedSilos.firstWhere((s) => s.id == _selectedSiloId);
 
   double get totalVolume =>
       CalculationService.calculateCylinderVolume(_radius, _cylinderHeight) +
@@ -50,12 +56,21 @@ class SiloViewModel extends ChangeNotifier {
     if (filledHeight <= _hopperHeight) {
       // Only in hopper
       final currentRadius = _radius * (filledHeight / _hopperHeight);
-      return CalculationService.calculateConeVolume(currentRadius, filledHeight);
+      return CalculationService.calculateConeVolume(
+        currentRadius,
+        filledHeight,
+      );
     } else {
       // Hopper is full + some cylinder
       final cylinderFilledHeight = filledHeight - _hopperHeight;
-      final hopperVol = CalculationService.calculateConeVolume(_radius, _hopperHeight);
-      final cylinderVol = CalculationService.calculateCylinderVolume(_radius, cylinderFilledHeight);
+      final hopperVol = CalculationService.calculateConeVolume(
+        _radius,
+        _hopperHeight,
+      );
+      final cylinderVol = CalculationService.calculateCylinderVolume(
+        _radius,
+        cylinderFilledHeight,
+      );
       return hopperVol + cylinderVol;
     }
   }
@@ -93,23 +108,95 @@ class SiloViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void saveCurrentSilo() {
+  void saveCurrentSilo({String? name}) {
+    final finalName = (name == null || name.isEmpty)
+        ? 'Silos ${_savedSilos.length + 1}'
+        : name;
+
     final newSilo = Silo(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
-      name: 'Silos ${_savedSilos.length + 1}',
+      name: finalName,
       radius: _radius,
       cylinderHeight: _cylinderHeight,
       hopperHeight: _hopperHeight,
       grainName: _selectedGrain.name,
-      tonnage: totalTonnage,
+      tonnage: filledTonnage,
+      maxTonnage: totalTonnage,
+      fillLevel: _fillLevel,
     );
     _savedSilos.add(newSilo);
+    _selectedSiloId = newSilo.id;
+    notifyListeners();
+  }
+
+  void updateSelectedSilo() {
+    if (_selectedSiloId == null) return;
+    final index = _savedSilos.indexWhere((s) => s.id == _selectedSiloId);
+    if (index != -1) {
+      final oldSilo = _savedSilos[index];
+      _savedSilos[index] = Silo(
+        id: oldSilo.id,
+        name: oldSilo.name,
+        radius: _radius,
+        cylinderHeight: _cylinderHeight,
+        hopperHeight: _hopperHeight,
+        grainName: _selectedGrain.name,
+        tonnage: filledTonnage,
+        maxTonnage: totalTonnage,
+        fillLevel: _fillLevel,
+      );
+      notifyListeners();
+    }
+  }
+
+  void loadSilo(Silo silo) {
+    _radius = silo.radius;
+    _cylinderHeight = silo.cylinderHeight;
+    _hopperHeight = silo.hopperHeight;
+    _fillLevel = silo.fillLevel;
+
+    try {
+      _selectedGrain = Grain.defaultGrains.firstWhere(
+        (g) => g.name == silo.grainName,
+      );
+      _customDensity = _selectedGrain.density;
+    } catch (_) {}
+
+    _selectedSiloId = silo.id;
+    notifyListeners();
+  }
+
+  void createNewSilo() {
+    _selectedSiloId = null;
     notifyListeners();
   }
 
   void deleteSilo(String id) {
+    if (_selectedSiloId == id) {
+      _selectedSiloId = null;
+    }
     _savedSilos.removeWhere((s) => s.id == id);
     notifyListeners();
+  }
+
+  void renameSelectedSilo(String newName) {
+    if (_selectedSiloId == null || newName.isEmpty) return;
+    final index = _savedSilos.indexWhere((s) => s.id == _selectedSiloId);
+    if (index != -1) {
+      final oldSilo = _savedSilos[index];
+      _savedSilos[index] = Silo(
+        id: oldSilo.id,
+        name: newName,
+        radius: oldSilo.radius,
+        cylinderHeight: oldSilo.cylinderHeight,
+        hopperHeight: oldSilo.hopperHeight,
+        grainName: oldSilo.grainName,
+        tonnage: oldSilo.tonnage,
+        maxTonnage: oldSilo.maxTonnage,
+        fillLevel: oldSilo.fillLevel,
+      );
+      notifyListeners();
+    }
   }
 
   void setFocusedDimension(SiloDimension dimension) {

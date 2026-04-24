@@ -6,6 +6,8 @@ class Silo {
   final double hopperHeight;
   final String grainName;
   final double tonnage;
+  final double maxTonnage;
+  final double fillLevel;
 
   Silo({
     required this.id,
@@ -15,5 +17,7 @@ class Silo {
     required this.hopperHeight,
     required this.grainName,
     required this.tonnage,
+    required this.maxTonnage,
+    required this.fillLevel,
   });
 }

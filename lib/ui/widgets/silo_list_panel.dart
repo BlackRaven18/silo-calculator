@@ -4,6 +4,7 @@ import '../../view_models/silo_view_model.dart';
 import '../../core/theme/app_theme.dart';
 import 'silo_summary_panel.dart';
 import 'silo_list_card.dart';
+import '../../core/services/notification_service.dart';
 
 class SiloListPanel extends StatelessWidget {
   const SiloListPanel({super.key});
@@ -34,13 +35,21 @@ class SiloListPanel extends StatelessWidget {
             decoration: BoxDecoration(
               color: AppTheme.primaryColor.withValues(alpha: 0.05),
               border: Border(
-                bottom: BorderSide(color: Theme.of(context).dividerColor.withValues(alpha: 0.1)),
-                top: BorderSide(color: Theme.of(context).dividerColor.withValues(alpha: 0.1)),
+                bottom: BorderSide(
+                  color: Theme.of(context).dividerColor.withValues(alpha: 0.1),
+                ),
+                top: BorderSide(
+                  color: Theme.of(context).dividerColor.withValues(alpha: 0.1),
+                ),
               ),
             ),
             child: Row(
               children: [
-                const Icon(Icons.inventory_2, color: AppTheme.primaryColor, size: 20),
+                const Icon(
+                  Icons.inventory_2,
+                  color: AppTheme.primaryColor,
+                  size: 20,
+                ),
                 const SizedBox(width: 12),
                 const Text(
                   'MOJE SILOSY',
@@ -52,14 +61,21 @@ class SiloListPanel extends StatelessWidget {
                 ),
                 const Spacer(),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
                     color: AppTheme.primaryColor,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
                     '${savedSilos.length}',
-                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
                   ),
                 ),
               ],
@@ -71,12 +87,21 @@ class SiloListPanel extends StatelessWidget {
                 : ListView.separated(
                     padding: const EdgeInsets.all(16),
                     itemCount: savedSilos.length,
-                    separatorBuilder: (context, index) => const SizedBox(height: 12),
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 12),
                     itemBuilder: (context, index) {
                       final silo = savedSilos[index];
                       return SiloListCard(
                         silo: silo,
-                        onDelete: () => vm.deleteSilo(silo.id),
+                        isSelected: vm.selectedSiloId == silo.id,
+                        onTap: () => vm.loadSilo(silo),
+                        onDelete: () {
+                          vm.deleteSilo(silo.id);
+                          NotificationService.show(
+                            context,
+                            'Silos został usunięty.',
+                          );
+                        },
                       );
                     },
                   ),
@@ -90,7 +115,11 @@ class SiloListPanel extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(Icons.unarchive_outlined, size: 64, color: Colors.grey.withValues(alpha: 0.3)),
+        Icon(
+          Icons.unarchive_outlined,
+          size: 64,
+          color: Colors.grey.withValues(alpha: 0.3),
+        ),
         const SizedBox(height: 16),
         const Text(
           'Brak zapisanych silosów',
@@ -105,5 +134,4 @@ class SiloListPanel extends StatelessWidget {
       ],
     );
   }
-
 }
